@@ -17,3 +17,6 @@ Press the arrow keys (Up, Down, Left, or Right) to move the red dot in random di
 Notes
 The game displays the actual path and the optimal path taken by the red dot to reach the prize bar.
 After reaching the prize bar, the game will pause for 3 seconds and restart automatically.
+
+for the article: 
+https://philpapers.org/rec/STAQS
