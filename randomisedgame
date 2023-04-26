@@ -1,0 +1,103 @@
+import pygame
+import random
+import sys
+import time
+
+# Initialize Pygame
+pygame.init()
+
+# Define screen size and colors
+screen_width, screen_height = 640, 480
+white = (255, 255, 255)
+black = (0, 0, 0)
+red = (255, 0, 0)
+font = pygame.font.Font(None, 36)
+
+# Create screen and clock objects
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Random Movement Game")
+clock = pygame.time.Clock()
+
+# Initialize score
+score = 0
+
+
+# Define the dot and prize classes
+class Dot(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface([10, 10])
+        self.image.fill(red)
+        self.rect = self.image.get_rect()
+        self.rect.x = screen_width // 7
+        self.rect.y = screen_height // 7
+        self.dist = self.rect.x // 10
+
+    def update(self):
+        pass
+
+
+class Prize(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface([20, 480])
+        self.image.fill(white)
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 0
+
+
+# Create dot and prize objects
+dot = Dot()
+prize = Prize()
+path = 0
+all_sprites = pygame.sprite.Group()
+all_sprites.add(dot)
+all_sprites.add(prize)
+actual_path = []
+
+def restart_game():
+    global path
+    path = 0
+    dot.rect.x = screen_width // 7
+    dot.rect.y = screen_height // 7
+
+
+# Game loop
+while True:
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+        if event.type == pygame.KEYDOWN:A
+            dx, dy = random.choice([(10, 0), (-10, 0)])
+            if event.key in [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]:
+                dot.rect.x = (dot.rect.x + dx) % screen_width
+                dot.rect.y = (dot.rect.y + dy) % screen_height
+                path += 1
+
+    # Check for collision
+    if pygame.sprite.collide_rect(dot, prize):
+        score += 1
+        # Display score
+        text = font.render("Score: " + str(score), True, (0, 255, 255))
+        screen.blit(text, (10, 70))
+        pygame.display.update()
+        actual_path.append(path)
+        # Pause for 3 seconds and restart the game
+        time.sleep(3)
+        restart_game()
+
+    # Clear screen and draw sprites
+    screen.fill(black)
+    all_sprites.draw(screen)
+    text = font.render("Actual path: " + str(path), True, (0, 255, 255))
+    text1 = font.render("optimal path: " + str(dot.dist), True, (0, 255, 255))
+    screen.blit(text, (10, 10))
+    screen.blit(text1, (10, 40))
+
+    # Update display and tick clock
+    pygame.display.flip()
+    clock.tick(60)
